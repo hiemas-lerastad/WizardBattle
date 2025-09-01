@@ -9,7 +9,9 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rpqav"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_dewec"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_paosx"]
+top_radius = 0.0
+height = 1.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_5ixxa"]
 
@@ -38,7 +40,8 @@ event_processor = NodePath("State/Event Processor")
 shape = SubResource("CapsuleShape3D_rpqav")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_dewec")
+transform = Transform3D(1, 0, 0, 0, 0.990738, -0.135785, 0, 0.135785, 0.990738, 0, 1.23481, 0.0936403)
+mesh = SubResource("CylinderMesh_paosx")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
 mesh = SubResource("CapsuleMesh_5ixxa")

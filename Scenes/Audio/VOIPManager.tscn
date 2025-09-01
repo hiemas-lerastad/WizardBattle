@@ -1,12 +1,18 @@
-[gd_scene load_steps=2 format=3 uid="uid://dk1e5uk22d3nf"]
+[gd_scene load_steps=3 format=3 uid="uid://dk1e5uk22d3nf"]
 
 [ext_resource type="Script" uid="uid://dlb7kyojg2xm7" path="res://Scripts/Audio/VOIPManager.gd" id="1_spehs"]
+[ext_resource type="Script" uid="uid://ba1bb5etkmgvu" path="res://Scripts/Audio/VoiceCommandRecognizer.gd" id="2_h5wnv"]
 
-[node name="VOIP Manager" type="Node" node_paths=PackedStringArray("input")]
+[node name="VOIP Manager" type="Node" node_paths=PackedStringArray("input", "voice_command_recogniser")]
 script = ExtResource("1_spehs")
 input = NodePath("Microphone Stream")
+voice_command_recogniser = NodePath("VoiceCommandRecogniser")
 
 [node name="Microphone Stream" type="AudioStreamPlayer3D" parent="."]
 volume_db = 20.0
 max_db = 6.0
 bus = &"Record"
+
+[node name="VoiceCommandRecogniser" type="Node" parent="."]
+script = ExtResource("2_h5wnv")
+metadata/_custom_type_script = "uid://ba1bb5etkmgvu"
