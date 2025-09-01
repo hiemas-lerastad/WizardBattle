@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://dr7kcll8rycnq"]
+
+[ext_resource type="Script" uid="uid://dg002big5biqe" path="res://Scripts/Level.gd" id="1_0ba56"]
+[ext_resource type="PackedScene" uid="uid://beno5ptv37k6k" path="res://Scenes/Entity/Player.tscn" id="1_r150o"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_c1w88"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_c1w88"]
+size = Vector2(20, 20)
+
+[sub_resource type="Environment" id="Environment_r150o"]
+
+[node name="Level" type="Node" node_paths=PackedStringArray("player_spawner")]
+script = ExtResource("1_0ba56")
+player_scene = ExtResource("1_r150o")
+player_spawner = NodePath("Online Entities/MultiplayerSpawner")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_c1w88")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("PlaneMesh_c1w88")
+skeleton = NodePath("../..")
+
+[node name="Environment" type="Node" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource("Environment_r150o")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Environment"]
+transform = Transform3D(1, 0, 0, 0, 0.511473, 0.859299, 0, -0.859299, 0.511473, 0, 6.08068, 0)
+
+[node name="Online Entities" type="Node" parent="."]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Online Entities"]
+_spawnable_scenes = PackedStringArray("uid://beno5ptv37k6k")
+spawn_path = NodePath("..")

@@ -1,0 +1,128 @@
+[gd_scene load_steps=19 format=3 uid="uid://cl5kgklag4vbp"]
+
+[ext_resource type="Script" uid="uid://c2kn1mudtv3fu" path="res://Scripts/Entity/State/EventProcessor.gd" id="1_i5gcb"]
+[ext_resource type="Script" uid="uid://s6igf5ffpshw" path="res://Scripts/Entity/State/BehaviourManager.gd" id="2_ks3vw"]
+[ext_resource type="Script" uid="uid://ctbq6plaidocu" path="res://Scripts/Entity/State/BehaviourContainer.gd" id="3_6c7xe"]
+[ext_resource type="Script" uid="uid://cqotyu6vnhe44" path="res://Scripts/Entity/Humanoid/Primary/Behaviours/HumanoidPrimaryIdleBehaviour.gd" id="4_n8xxh"]
+[ext_resource type="Script" uid="uid://bgywwee53ppsu" path="res://Scripts/Entity/State/ActionContainer.gd" id="5_gfptg"]
+[ext_resource type="Script" uid="uid://t4bkal6ucsts" path="res://Scripts/Entity/Humanoid/Primary/Actions/HumanoidPrimaryIdleAction.gd" id="6_ekqb4"]
+[ext_resource type="Script" uid="uid://ce0saoqq6hk24" path="res://Scripts/Entity/Humanoid/Movement/Behaviours/Jog.gd" id="7_j4q7a"]
+[ext_resource type="Script" uid="uid://c4cv3ydmr6ayt" path="res://Scripts/Entity/Humanoid/Movement/Behaviours/Locked.gd" id="8_t1tna"]
+[ext_resource type="Script" uid="uid://bucoofl35ab4j" path="res://Scripts/Entity/Humanoid/Movement/Behaviours/Sprint.gd" id="9_id01d"]
+[ext_resource type="Script" uid="uid://cjt2n1f5gb5ja" path="res://Scripts/Entity/Humanoid/Movement/Behaviours/Walk.gd" id="10_v4fgn"]
+[ext_resource type="Script" uid="uid://bej2mskmxdok" path="res://Scripts/Entity/Humanoid/Movement/Actions/CrouchIdle.gd" id="11_se8e1"]
+[ext_resource type="Script" uid="uid://blynkpwkecadu" path="res://Scripts/Entity/Humanoid/Movement/Actions/CrouchJog.gd" id="12_nsa3p"]
+[ext_resource type="Script" uid="uid://c0bo6g5dvu3rb" path="res://Scripts/Entity/Humanoid/Movement/Actions/Idle.gd" id="13_eutfk"]
+[ext_resource type="Script" uid="uid://cvf4cjmvjong4" path="res://Scripts/Entity/Humanoid/Movement/Actions/Jog.gd" id="14_1byhu"]
+[ext_resource type="Script" uid="uid://bt5ro2ke6j6k8" path="res://Scripts/Entity/Humanoid/Movement/Actions/Jump.gd" id="15_h3pkg"]
+[ext_resource type="Script" uid="uid://bsl5eb2g084me" path="res://Scripts/Entity/Humanoid/Movement/Actions/Sprint.gd" id="16_okl36"]
+[ext_resource type="Script" uid="uid://otsjnk5scgyu" path="res://Scripts/Entity/Humanoid/Movement/Actions/Walk.gd" id="17_gkpgp"]
+[ext_resource type="Script" uid="uid://jx6bxfijf2io" path="res://Scripts/Entity/Humanoid/Movement/Actions/Locked.gd" id="18_rlhal"]
+
+[node name="Event Processor" type="Node" node_paths=PackedStringArray("entity", "primary_behaviour_manager")]
+script = ExtResource("1_i5gcb")
+entity = NodePath("")
+primary_behaviour_manager = NodePath("Primary Behaviour Manager")
+metadata/_custom_type_script = "uid://c2kn1mudtv3fu"
+
+[node name="Primary Behaviour Manager" type="Node" parent="." node_paths=PackedStringArray("behavior_container", "actions_container", "current_behaviour", "secondary_behaviour_managers")]
+script = ExtResource("2_ks3vw")
+behavior_container = NodePath("Behaviour Container")
+actions_container = NodePath("Action Container")
+current_behaviour = NodePath("Behaviour Container/Humanoid Primary Idle Behaviour")
+id = "primary"
+secondary_behaviour_managers = [NodePath("../Movement Behaviour Manager")]
+metadata/_custom_type_script = "uid://s6igf5ffpshw"
+
+[node name="Behaviour Container" type="Node" parent="Primary Behaviour Manager"]
+script = ExtResource("3_6c7xe")
+metadata/_custom_type_script = "uid://ctbq6plaidocu"
+
+[node name="Humanoid Primary Idle Behaviour" type="Node" parent="Primary Behaviour Manager/Behaviour Container"]
+script = ExtResource("4_n8xxh")
+metadata/_custom_type_script = "uid://cqotyu6vnhe44"
+
+[node name="Action Container" type="Node" parent="Primary Behaviour Manager"]
+script = ExtResource("5_gfptg")
+metadata/_custom_type_script = "uid://bgywwee53ppsu"
+
+[node name="Humanoid Primary Idle Action" type="Node" parent="Primary Behaviour Manager/Action Container"]
+script = ExtResource("6_ekqb4")
+action_name = "idle"
+metadata/_custom_type_script = "uid://t4bkal6ucsts"
+
+[node name="Movement Behaviour Manager" type="Node" parent="." node_paths=PackedStringArray("behavior_container", "actions_container", "current_behaviour")]
+script = ExtResource("2_ks3vw")
+behavior_container = NodePath("Behaviour Container")
+actions_container = NodePath("Action Container")
+current_behaviour = NodePath("Behaviour Container/Humanoid Movement Jog Behaviour")
+id = "movement"
+metadata/_custom_type_script = "uid://s6igf5ffpshw"
+
+[node name="Behaviour Container" type="Node" parent="Movement Behaviour Manager"]
+script = ExtResource("3_6c7xe")
+metadata/_custom_type_script = "uid://ctbq6plaidocu"
+
+[node name="Humanoid Movement Jog Behaviour" type="Node" parent="Movement Behaviour Manager/Behaviour Container"]
+script = ExtResource("7_j4q7a")
+behaviour_string = "jog"
+metadata/_custom_type_script = "uid://ce0saoqq6hk24"
+
+[node name="Humanoid Movement Locked Behaviour" type="Node" parent="Movement Behaviour Manager/Behaviour Container"]
+script = ExtResource("8_t1tna")
+behaviour_string = "locked"
+metadata/_custom_type_script = "uid://c4cv3ydmr6ayt"
+
+[node name="Humanoid Movement Sprint Behaviour" type="Node" parent="Movement Behaviour Manager/Behaviour Container"]
+script = ExtResource("9_id01d")
+behaviour_string = "sprint"
+metadata/_custom_type_script = "uid://bucoofl35ab4j"
+
+[node name="Humanoid Movement Walk Behaviour" type="Node" parent="Movement Behaviour Manager/Behaviour Container"]
+script = ExtResource("10_v4fgn")
+behaviour_string = "walk"
+metadata/_custom_type_script = "uid://cjt2n1f5gb5ja"
+
+[node name="Action Container" type="Node" parent="Movement Behaviour Manager"]
+script = ExtResource("5_gfptg")
+metadata/_custom_type_script = "uid://bgywwee53ppsu"
+
+[node name="Humanoid Movement Crouch Idle Action" type="Node" parent="Movement Behaviour Manager/Action Container"]
+script = ExtResource("11_se8e1")
+action_name = "crouch idle"
+metadata/_custom_type_script = "uid://bej2mskmxdok"
+
+[node name="Humanoid Movement Crouch Jog Action" type="Node" parent="Movement Behaviour Manager/Action Container"]
+script = ExtResource("12_nsa3p")
+action_name = "crouch jog"
+metadata/_custom_type_script = "uid://blynkpwkecadu"
+
+[node name="Humanoid Movement Idle Action" type="Node" parent="Movement Behaviour Manager/Action Container"]
+script = ExtResource("13_eutfk")
+action_name = "idle"
+metadata/_custom_type_script = "uid://c0bo6g5dvu3rb"
+
+[node name="Humanoid Movement Jog Action" type="Node" parent="Movement Behaviour Manager/Action Container"]
+script = ExtResource("14_1byhu")
+action_name = "jog"
+metadata/_custom_type_script = "uid://cvf4cjmvjong4"
+
+[node name="Humanoid Movement Jump Action" type="Node" parent="Movement Behaviour Manager/Action Container"]
+script = ExtResource("15_h3pkg")
+action_name = "jump"
+metadata/_custom_type_script = "uid://bt5ro2ke6j6k8"
+
+[node name="Humanoid Movement Sprint Action" type="Node" parent="Movement Behaviour Manager/Action Container"]
+script = ExtResource("16_okl36")
+action_name = "sprint"
+metadata/_custom_type_script = "uid://bsl5eb2g084me"
+
+[node name="Humanoid Movement Walk Action" type="Node" parent="Movement Behaviour Manager/Action Container"]
+script = ExtResource("17_gkpgp")
+action_name = "walk"
+metadata/_custom_type_script = "uid://otsjnk5scgyu"
+
+[node name="Humanoid Movement Locked Action" type="Node" parent="Movement Behaviour Manager/Action Container"]
+script = ExtResource("18_rlhal")
+action_name = "locked"
+metadata/_custom_type_script = "uid://jx6bxfijf2io"

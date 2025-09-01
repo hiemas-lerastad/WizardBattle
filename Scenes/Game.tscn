@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://ni7xekvuynii"]
+
+[ext_resource type="Script" uid="uid://cjbmw6rr3skds" path="res://Scripts/Game.gd" id="1_b2bpf"]
+[ext_resource type="PackedScene" uid="uid://dr7kcll8rycnq" path="res://Scenes/Level.tscn" id="2_7lihs"]
+[ext_resource type="Script" uid="uid://bva8v2oe0k7qh" path="res://Scripts/UI/UIManager.gd" id="3_fgofq"]
+[ext_resource type="PackedScene" uid="uid://dmt7muoglebw" path="res://Scenes/UI/ConnectionManager.tscn" id="4_2irst"]
+[ext_resource type="PackedScene" uid="uid://ckrqpvodmxrud" path="res://Scenes/UI/Lobby.tscn" id="5_bf53h"]
+
+[node name="Game" type="Node" node_paths=PackedStringArray("level")]
+script = ExtResource("1_b2bpf")
+level = NodePath("Level")
+
+[node name="Level" parent="." instance=ExtResource("2_7lihs")]
+
+[node name="UI Manager" type="CanvasLayer" parent="." node_paths=PackedStringArray("connection_manager", "lobby")]
+script = ExtResource("3_fgofq")
+connection_manager = NodePath("Connection Manager")
+lobby = NodePath("Lobby")
+
+[node name="Connection Manager" parent="UI Manager" instance=ExtResource("4_2irst")]
+
+[node name="Lobby" parent="UI Manager" instance=ExtResource("5_bf53h")]
+visible = false
+
+[connection signal="hosting" from="UI Manager/Connection Manager" to="UI Manager" method="_on_connection_manager_hosting"]
+[connection signal="joining" from="UI Manager/Connection Manager" to="UI Manager" method="_on_connection_manager_joining"]
+[connection signal="quit_game" from="UI Manager/Lobby" to="UI Manager" method="_on_lobby_quit_game"]
+[connection signal="started_game" from="UI Manager/Lobby" to="." method="_on_lobby_started_game"]
+[connection signal="started_game" from="UI Manager/Lobby" to="UI Manager" method="_on_lobby_started_game"]
+[connection signal="visibility_changed" from="UI Manager/Lobby" to="UI Manager/Lobby" method="_on_visibility_changed"]

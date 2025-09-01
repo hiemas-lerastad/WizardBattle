@@ -1,0 +1,66 @@
+[gd_scene load_steps=7 format=3 uid="uid://b6mbexslg0q8r"]
+
+[ext_resource type="PackedScene" uid="uid://cl5kgklag4vbp" path="res://Scenes/Entity/HumanoidEventProcessor.tscn" id="1_y3hy6"]
+[ext_resource type="Script" uid="uid://s6igf5ffpshw" path="res://Scripts/Entity/State/BehaviourManager.gd" id="2_2n5pd"]
+[ext_resource type="Script" uid="uid://ctbq6plaidocu" path="res://Scripts/Entity/State/BehaviourContainer.gd" id="3_h3g2f"]
+[ext_resource type="Script" uid="uid://cl0r5457gln87" path="res://Scripts/Entity/Humanoid/Camera/Behaviours/PlayerCameraFreeBehaviour.gd" id="4_eel7d"]
+[ext_resource type="Script" uid="uid://bgywwee53ppsu" path="res://Scripts/Entity/State/ActionContainer.gd" id="5_4fb2u"]
+[ext_resource type="Script" uid="uid://gh83lwatjmw3" path="res://Scripts/Entity/Humanoid/Camera/Actions/PlayerCameraFreeAction.gd" id="6_6dfty"]
+
+[node name="Event Processor" instance=ExtResource("1_y3hy6")]
+
+[node name="Primary Behaviour Manager" parent="." index="0" node_paths=PackedStringArray("secondary_behaviour_managers", "debug_label")]
+secondary_behaviour_managers = [NodePath("../Movement Behaviour Manager"), NodePath("../Camera Behaviour Manager")]
+debug_label = NodePath("../VBoxContainer/Label")
+
+[node name="Movement Behaviour Manager" parent="." index="1" node_paths=PackedStringArray("debug_label")]
+debug_label = NodePath("../VBoxContainer/Label2")
+
+[node name="Humanoid Movement Jog Action" parent="Movement Behaviour Manager/Action Container" index="3"]
+movement_speed = 2.5
+
+[node name="Humanoid Movement Sprint Action" parent="Movement Behaviour Manager/Action Container" index="5"]
+movement_speed = 5.0
+
+[node name="Humanoid Movement Walk Action" parent="Movement Behaviour Manager/Action Container" index="6"]
+movement_speed = 1.0
+
+[node name="Camera Behaviour Manager" type="Node" parent="." index="2" node_paths=PackedStringArray("behavior_container", "actions_container", "current_behaviour", "debug_label")]
+script = ExtResource("2_2n5pd")
+behavior_container = NodePath("Behaviour Container")
+actions_container = NodePath("Action Container")
+current_behaviour = NodePath("Behaviour Container/Player Camera Free Behaviour")
+id = "camera"
+debug_label = NodePath("../VBoxContainer/Label3")
+metadata/_custom_type_script = "uid://s6igf5ffpshw"
+
+[node name="Behaviour Container" type="Node" parent="Camera Behaviour Manager" index="0"]
+script = ExtResource("3_h3g2f")
+metadata/_custom_type_script = "uid://ctbq6plaidocu"
+
+[node name="Player Camera Free Behaviour" type="Node" parent="Camera Behaviour Manager/Behaviour Container" index="0"]
+script = ExtResource("4_eel7d")
+behaviour_string = "free look"
+metadata/_custom_type_script = "uid://cl0r5457gln87"
+
+[node name="Action Container" type="Node" parent="Camera Behaviour Manager" index="1"]
+script = ExtResource("5_4fb2u")
+metadata/_custom_type_script = "uid://bgywwee53ppsu"
+
+[node name="Player Camera Free Action" type="Node" parent="Camera Behaviour Manager/Action Container" index="0"]
+script = ExtResource("6_6dfty")
+action_name = "free look"
+metadata/_custom_type_script = "uid://gh83lwatjmw3"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="3"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="VBoxContainer" index="0"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer" index="1"]
+layout_mode = 2
+
+[node name="Label3" type="Label" parent="VBoxContainer" index="2"]
+layout_mode = 2

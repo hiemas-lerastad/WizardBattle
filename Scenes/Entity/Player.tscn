@@ -1,0 +1,92 @@
+[gd_scene load_steps=12 format=3 uid="uid://beno5ptv37k6k"]
+
+[ext_resource type="Script" uid="uid://h1huwpt3bg8g" path="res://Scripts/Entity/Humanoid/Player/Player.gd" id="1_rpqav"]
+[ext_resource type="Script" uid="uid://qormuaaffdhq" path="res://Scripts/Entity/Humanoid/Player/PlayerInputGatherer.gd" id="2_kyqiw"]
+[ext_resource type="Script" uid="uid://c7o73num0uobm" path="res://Scripts/Entity/Humanoid/Player/PlayerContextGatherer.gd" id="3_gntrk"]
+[ext_resource type="Script" uid="uid://xk6v37avt15g" path="res://Scripts/Utility/SpatialTransmitter.gd" id="3_paosx"]
+[ext_resource type="PackedScene" uid="uid://b6mbexslg0q8r" path="res://Scenes/Entity/PlayerEventProcessor.tscn" id="4_dewec"]
+[ext_resource type="PackedScene" uid="uid://dk1e5uk22d3nf" path="res://Scenes/Audio/VOIPManager.tscn" id="5_sasgv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rpqav"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_dewec"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5ixxa"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dewec"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_paosx"]
+mix_rate_mode = 0
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("pivot", "camera", "voice_transmitter", "input_gatherer", "context_gatherer", "event_processor")]
+collision_layer = 2
+script = ExtResource("1_rpqav")
+pivot = NodePath("Pivot")
+camera = NodePath("Pivot/Camera3D")
+voice_transmitter = NodePath("Audio/SpatialTransmitter")
+input_gatherer = NodePath("State/Player Input Gatherer")
+context_gatherer = NodePath("State/Player Context Gatherer")
+event_processor = NodePath("State/Event Processor")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_rpqav")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_dewec")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_5ixxa")
+
+[node name="Pivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Pivot"]
+
+[node name="Player Syncroniser" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_dewec")
+
+[node name="Audio" type="Node3D" parent="."]
+
+[node name="VOIP Manager" parent="Audio" node_paths=PackedStringArray("outputs") instance=ExtResource("5_sasgv")]
+outputs = [NodePath("../SpatialTransmitter/Player Voice")]
+
+[node name="SpatialTransmitter" type="Node3D" parent="Audio" node_paths=PackedStringArray("audio_player") groups=["Transmitter"]]
+script = ExtResource("3_paosx")
+transmitting = true
+range_full = 15.0
+range_partial = 20.0
+audio_transmitter = true
+audio_player = NodePath("Player Voice")
+smooth_occlusion = true
+active_color = Color(0, 0, 1, 1)
+inactive_color = Color(1, 0, 0, 1)
+disable_debug_markers = false
+metadata/_custom_type_script = "uid://xk6v37avt15g"
+
+[node name="Player Voice" type="AudioStreamPlayer3D" parent="Audio/SpatialTransmitter"]
+stream = SubResource("AudioStreamGenerator_paosx")
+volume_db = 5.0
+
+[node name="State" type="Node3D" parent="."]
+
+[node name="Player Input Gatherer" type="Node" parent="State" node_paths=PackedStringArray("entity")]
+script = ExtResource("2_kyqiw")
+entity = NodePath("../..")
+metadata/_custom_type_script = "uid://qormuaaffdhq"
+
+[node name="Player Context Gatherer" type="Node3D" parent="State" node_paths=PackedStringArray("ground_check")]
+script = ExtResource("3_gntrk")
+ground_check = NodePath("RayCast3D")
+metadata/_custom_type_script = "uid://c7o73num0uobm"
+
+[node name="RayCast3D" type="RayCast3D" parent="State/Player Context Gatherer"]
+target_position = Vector3(0, -1.05, 0)
+
+[node name="Event Processor" parent="State" node_paths=PackedStringArray("entity") instance=ExtResource("4_dewec")]
+entity = NodePath("../..")
