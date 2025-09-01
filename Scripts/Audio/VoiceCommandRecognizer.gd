@@ -11,7 +11,9 @@ extends Node;
 @export var max_templates_per_command: int = 5;
 @export var command_cooldown: float = 0.8;
 @export var global_recognition_threshold: float = 5.0;
-@export var confidence_threshold: float = 0.8;
+@export var confidence_threshold: float = 1.0;
+
+signal fire_command;
 
 var commands: Array[String] = ["fireball", "iceshard", "magicmissile"];
 
@@ -82,7 +84,7 @@ func _dtw(seq_a: Array, seq_b: Array, best_so_far: float= INF) -> float:
 
 	for i in range(1, n + 1):
 		curr[0] = INF;
-		var row_min: int = INF;
+		var row_min: int = int(INF);
 
 		for j in range(1, m + 1):
 			var cost: float = _euclidean(_normalize(seq_a[i - 1]), _normalize(seq_b[j - 1]));
@@ -146,7 +148,7 @@ func add_spectrum_frame(frame: PackedFloat32Array) -> void:
 
 func _handle_command(cmd: String) -> void:
 	print("[VoiceCommand] Recognized command:", cmd);
-	# optional: send RPC to server here
+	fire_command.emit(cmd);
 
 func record_template(cmd: String) -> void:
 	capturing = true;

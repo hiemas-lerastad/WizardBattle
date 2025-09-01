@@ -24,16 +24,19 @@ var effect: AudioEffect;
 var playbacks: Array[AudioStreamGeneratorPlayback];
 var analyser: AudioEffectSpectrumAnalyzerInstance;
 
+signal voice_command;
+
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("record_fireball"):
-		voice_command_recogniser.record_template("fireball");
+	if is_multiplayer_authority():
+		if event.is_action_pressed("record_fireball"):
+			voice_command_recogniser.record_template("fireball");
 
-	if event.is_action_pressed("record_icespike"):
-		voice_command_recogniser.record_template("iceshard");
+		if event.is_action_pressed("record_icespike"):
+			voice_command_recogniser.record_template("iceshard");
 
-	if event.is_action_pressed("record_magic_missile"):
-		voice_command_recogniser.record_template("magicmissile");
+		if event.is_action_pressed("record_magic_missile"):
+			voice_command_recogniser.record_template("magicmissile");
 
 
 func _ready() -> void:
@@ -45,6 +48,9 @@ func _ready() -> void:
 		idx = AudioServer.get_bus_index(bus_name);
 		effect = AudioServer.get_bus_effect(idx, effect_id);
 
+		if voice_command_recogniser:
+			voice_command_recogniser.connect("fire_command", handle_voice_command);
+
 		if AudioServer.get_bus_effect(idx, analyser_effect_id):
 			analyser = AudioServer.get_bus_effect_instance(idx, analyser_effect_id) as AudioEffectSpectrumAnalyzerInstance;
 
@@ -54,10 +60,11 @@ func _ready() -> void:
 		playbacks.append(output.get_stream_playback());
 
 
+func handle_voice_command(command: String) -> void:
+	voice_command.emit(command);
+
 func get_band_magnitudes() -> PackedFloat32Array:
 	var mags := PackedFloat32Array()
-	var bus_idx = AudioServer.get_bus_index("Record")
-	var analyser: AudioEffectSpectrumAnalyzerInstance = AudioServer.get_bus_effect_instance(bus_idx, 1)
 
 	if not analyser:
 		return mags

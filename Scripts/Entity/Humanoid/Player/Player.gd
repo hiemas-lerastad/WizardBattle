@@ -4,6 +4,7 @@ extends Entity;
 @export var pivot: Node3D;
 @export var camera: Camera3D;
 @export var voice_transmitter: SpatialTransmitter;
+@export var voip_manager: VOIPManager;
 
 var authority_id: int;
 var index: int;
@@ -30,3 +31,14 @@ func _ready() -> void:
 		camera.current = true;
 
 		voice_transmitter.transmitting = false;
+
+	if voip_manager:
+		voip_manager.connect("voice_command", handle_voice_command);
+
+func handle_voice_command(command: String) -> void:
+	handle_client_voice_command.rpc(command);
+
+@rpc("any_peer", "call_remote", "reliable")
+func handle_client_voice_command(command: String) -> void:
+	print(multiplayer.get_unique_id())
+	print(str(authority_id) + " - voice command triggered: " + command)

@@ -26,12 +26,13 @@ properties/1/replication_mode = 1
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_paosx"]
 mix_rate_mode = 0
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("pivot", "camera", "voice_transmitter", "input_gatherer", "context_gatherer", "event_processor")]
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("pivot", "camera", "voice_transmitter", "voip_manager", "input_gatherer", "context_gatherer", "event_processor")]
 collision_layer = 2
 script = ExtResource("1_rpqav")
 pivot = NodePath("Pivot")
 camera = NodePath("Pivot/Camera3D")
 voice_transmitter = NodePath("Audio/SpatialTransmitter")
+voip_manager = NodePath("Audio/VOIP Manager")
 input_gatherer = NodePath("State/Player Input Gatherer")
 context_gatherer = NodePath("State/Player Context Gatherer")
 event_processor = NodePath("State/Event Processor")
