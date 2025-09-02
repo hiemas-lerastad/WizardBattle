@@ -17,3 +17,7 @@ shape = SubResource("SphereShape3D_v1yuq")
 
 [node name="MeshInstance3D" parent="." index="1"]
 mesh = SubResource("SphereMesh_qv8pf")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." index="2"]
+light_color = Color(1, 0.172549, 0.121569, 1)
+shadow_enabled = true

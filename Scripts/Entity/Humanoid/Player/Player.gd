@@ -5,6 +5,10 @@ extends Entity;
 @export var camera: Camera3D;
 @export var voice_transmitter: SpatialTransmitter;
 @export var voip_manager: VOIPManager;
+@export var first_person_visuals: Node3D;
+@export var third_person_visuals: Node3D;
+
+@export_group("Projectiles")
 @export_file("*.tscn") var fireball_scene_path: String;
 @export_file("*.tscn") var iceshard_scene_path: String;
 @export_file("*.tscn") var magicmissile_scene_path: String;
@@ -32,6 +36,9 @@ func update(_delta: float) -> void:
 
 func _ready() -> void:
 	if is_multiplayer_authority():
+		first_person_visuals.visible = true;
+		third_person_visuals.visible = false;
+
 		for sig in get_tree().get_nodes_in_group("Transmitter"):
 			sig.target = self;
 
@@ -40,8 +47,11 @@ func _ready() -> void:
 
 		voice_transmitter.transmitting = false;
 
-	if voip_manager:
-		voip_manager.connect("voice_command", handle_voice_command);
+		if voip_manager:
+			voip_manager.connect("voice_command", handle_voice_command);
+	else:
+		first_person_visuals.visible = false;
+		third_person_visuals.visible = true;
 
 
 func set_casting(value: bool) -> void:
@@ -55,7 +65,8 @@ func update_health(amount: float) -> void:
 
 func handle_voice_command(command: String) -> void:
 	handle_client_voice_command.rpc(command);
-	
+
+	#rework
 	if command == "fireball":
 		spawn_projectile.emit(fireball_scene_path, -pivot.global_basis.z, index);
 	if command == "iceshard":

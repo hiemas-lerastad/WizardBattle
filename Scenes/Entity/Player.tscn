@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://beno5ptv37k6k"]
+[gd_scene load_steps=14 format=3 uid="uid://beno5ptv37k6k"]
 
 [ext_resource type="Script" uid="uid://h1huwpt3bg8g" path="res://Scripts/Entity/Humanoid/Player/Player.gd" id="1_rpqav"]
 [ext_resource type="Script" uid="uid://qormuaaffdhq" path="res://Scripts/Entity/Humanoid/Player/PlayerInputGatherer.gd" id="2_kyqiw"]
@@ -9,12 +9,6 @@
 [ext_resource type="Resource" uid="uid://bajeub40jbygr" path="res://Assets/Stats/PlayerStats.tres" id="6_untn5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rpqav"]
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_paosx"]
-top_radius = 0.0
-height = 1.0
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_5ixxa"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_dewec"]
 properties/0/path = NodePath(".:position")
@@ -27,13 +21,27 @@ properties/1/replication_mode = 1
 [sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_paosx"]
 mix_rate_mode = 0
 
-[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("pivot", "camera", "voice_transmitter", "voip_manager", "input_gatherer", "context_gatherer", "event_processor")]
+[sub_resource type="CylinderMesh" id="CylinderMesh_paosx"]
+top_radius = 0.0
+height = 1.0
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5ixxa"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_untn5"]
+top_radius = 0.05
+bottom_radius = 0.05
+height = 0.2
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("pivot", "camera", "voice_transmitter", "voip_manager", "first_person_visuals", "third_person_visuals", "input_gatherer", "context_gatherer", "event_processor")]
 collision_layer = 2
+collision_mask = 3
 script = ExtResource("1_rpqav")
 pivot = NodePath("Pivot")
 camera = NodePath("Pivot/Camera3D")
 voice_transmitter = NodePath("Audio/SpatialTransmitter")
 voip_manager = NodePath("Audio/VOIP Manager")
+first_person_visuals = NodePath("Visuals/First Person")
+third_person_visuals = NodePath("Visuals/Third Person")
 fireball_scene_path = "uid://ccaywac6wj0d1"
 iceshard_scene_path = "uid://durrc32ciguo0"
 magicmissile_scene_path = "uid://c5c7o7auonaxi"
@@ -43,13 +51,6 @@ event_processor = NodePath("State/Event Processor")
 
 [node name="Collision" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_rpqav")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.990738, -0.135785, 0, 0.135785, 0.990738, 0, 1.23481, 0.0936403)
-mesh = SubResource("CylinderMesh_paosx")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_5ixxa")
 
 [node name="Pivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -99,3 +100,22 @@ target_position = Vector3(0, -1.05, 0)
 
 [node name="Event Processor" parent="State" node_paths=PackedStringArray("entity") instance=ExtResource("4_dewec")]
 entity = NodePath("../..")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="First Person" type="Node3D" parent="Visuals"]
+
+[node name="Third Person" type="Node3D" parent="Visuals"]
+
+[node name="Hat" type="MeshInstance3D" parent="Visuals/Third Person"]
+transform = Transform3D(1, 0, 0, 0, 0.990738, -0.135785, 0, 0.135785, 0.990738, 0, 1.23481, 0.0936403)
+mesh = SubResource("CylinderMesh_paosx")
+skeleton = NodePath("../../..")
+
+[node name="Body" type="MeshInstance3D" parent="Visuals/Third Person"]
+mesh = SubResource("CapsuleMesh_5ixxa")
+skeleton = NodePath("../../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visuals/Third Person"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.413403, -0.557543)
+mesh = SubResource("CylinderMesh_untn5")
