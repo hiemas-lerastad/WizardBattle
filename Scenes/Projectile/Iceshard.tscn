@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://durrc32ciguo0"]
+
+[ext_resource type="PackedScene" uid="uid://dmupidi2eyufr" path="res://Scenes/Projectile/Projectile.tscn" id="1_h546j"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_v1yuq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h546j"]
+albedo_color = Color(0.337255, 0.705882, 1, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_jbauk"]
+material = SubResource("StandardMaterial3D_h546j")
+
+[node name="Iceshard" instance=ExtResource("1_h546j")]
+
+[node name="CollisionShape3D" parent="Area3D" index="0"]
+shape = SubResource("SphereShape3D_v1yuq")
+
+[node name="MeshInstance3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 0.0785982, 0.996906, 0, -0.996906, 0.0785982, 0, 0, 0)
+mesh = SubResource("PrismMesh_jbauk")

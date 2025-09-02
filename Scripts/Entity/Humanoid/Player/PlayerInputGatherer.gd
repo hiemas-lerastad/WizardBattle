@@ -80,4 +80,7 @@ func gather_input() -> InputPackage:
 		new_input.pivot_event = mouse_event.relative;
 		mouse_event = null;
 
+	if Input.is_action_pressed("interact_cast"):
+		new_input.actions.append("cast");
+
 	return new_input;

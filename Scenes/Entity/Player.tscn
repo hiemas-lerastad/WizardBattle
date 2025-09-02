@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://beno5ptv37k6k"]
+[gd_scene load_steps=13 format=3 uid="uid://beno5ptv37k6k"]
 
 [ext_resource type="Script" uid="uid://h1huwpt3bg8g" path="res://Scripts/Entity/Humanoid/Player/Player.gd" id="1_rpqav"]
 [ext_resource type="Script" uid="uid://qormuaaffdhq" path="res://Scripts/Entity/Humanoid/Player/PlayerInputGatherer.gd" id="2_kyqiw"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://xk6v37avt15g" path="res://Scripts/Utility/SpatialTransmitter.gd" id="3_paosx"]
 [ext_resource type="PackedScene" uid="uid://b6mbexslg0q8r" path="res://Scenes/Entity/PlayerEventProcessor.tscn" id="4_dewec"]
 [ext_resource type="PackedScene" uid="uid://dk1e5uk22d3nf" path="res://Scenes/Audio/VOIPManager.tscn" id="5_sasgv"]
+[ext_resource type="Resource" uid="uid://bajeub40jbygr" path="res://Assets/Stats/PlayerStats.tres" id="6_untn5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rpqav"]
 
@@ -33,6 +34,9 @@ pivot = NodePath("Pivot")
 camera = NodePath("Pivot/Camera3D")
 voice_transmitter = NodePath("Audio/SpatialTransmitter")
 voip_manager = NodePath("Audio/VOIP Manager")
+fireball_scene_path = "uid://ccaywac6wj0d1"
+iceshard_scene_path = "uid://durrc32ciguo0"
+magicmissile_scene_path = "uid://c5c7o7auonaxi"
 input_gatherer = NodePath("State/Player Input Gatherer")
 context_gatherer = NodePath("State/Player Context Gatherer")
 event_processor = NodePath("State/Event Processor")
@@ -87,6 +91,7 @@ metadata/_custom_type_script = "uid://qormuaaffdhq"
 [node name="Player Context Gatherer" type="Node3D" parent="State" node_paths=PackedStringArray("ground_check")]
 script = ExtResource("3_gntrk")
 ground_check = NodePath("RayCast3D")
+stats = ExtResource("6_untn5")
 metadata/_custom_type_script = "uid://c7o73num0uobm"
 
 [node name="RayCast3D" type="RayCast3D" parent="State/Player Context Gatherer"]

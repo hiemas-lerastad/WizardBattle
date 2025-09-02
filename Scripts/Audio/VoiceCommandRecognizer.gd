@@ -2,6 +2,7 @@ class_name VoiceCommandRecogniser;
 extends Node;
 
 @export_group("Settings")
+@export var enabled: bool = false;
 @export var num_bands: int = 20;
 @export var frame_interval: float = 0.05;
 @export var max_utterance_frames: int = 40;
@@ -107,43 +108,47 @@ func _physics_process(delta: float) -> void:
 
 
 func add_spectrum_frame(frame: PackedFloat32Array) -> void:
-	rolling_buffer.append(frame);
+	if enabled:
+		rolling_buffer.append(frame);
 
-	if rolling_buffer.size() > max_utterance_frames:
-		rolling_buffer.remove_at(0);
+		if rolling_buffer.size() > max_utterance_frames:
+			rolling_buffer.remove_at(0);
 
-	var energy: float = 0.0;
+		var energy: float = 0.0;
 
-	for v in frame:
-		energy += v;
+		for v in frame:
+			energy += v;
 
-	energy /= max(1, frame.size());
+		energy /= max(1, frame.size());
 
-	var in_speech: bool = energy >= energy_threshold;
+		var in_speech: bool = energy >= energy_threshold;
 
-	if in_speech:
-		if not capturing:
-			capturing = true;
+		if in_speech:
+			if not capturing:
+				capturing = true;
+				candidate_frames.clear();
+
+			candidate_frames.append(frame);
+
+			if candidate_frames.size() > max_utterance_frames:
+				candidate_frames.remove_at(0);
+
+		elif capturing:
+			capturing = false;
+
+			if candidate_frames.size() >= min_utterance_frames:
+				var cmd: String = _recognize(candidate_frames);
+
+				if cmd != "":
+					if cmd != last_command or (current_time - last_command_time >= command_cooldown):
+						_handle_command(cmd);
+						last_command = cmd;
+						last_command_time = current_time;
+
 			candidate_frames.clear();
 
-		candidate_frames.append(frame);
-
-		if candidate_frames.size() > max_utterance_frames:
-			candidate_frames.remove_at(0);
-
-	elif capturing:
+	else:
 		capturing = false;
-
-		if candidate_frames.size() >= min_utterance_frames:
-			var cmd: String = _recognize(candidate_frames);
-
-			if cmd != "":
-				if cmd != last_command or (current_time - last_command_time >= command_cooldown):
-					_handle_command(cmd);
-					last_command = cmd;
-					last_command_time = current_time;
-
-		candidate_frames.clear();
 
 
 func _handle_command(cmd: String) -> void:

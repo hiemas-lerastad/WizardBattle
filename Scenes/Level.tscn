@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dr7kcll8rycnq"]
+[gd_scene load_steps=7 format=3 uid="uid://dr7kcll8rycnq"]
 
 [ext_resource type="Script" uid="uid://dg002big5biqe" path="res://Scripts/Level.gd" id="1_0ba56"]
 [ext_resource type="PackedScene" uid="uid://beno5ptv37k6k" path="res://Scenes/Entity/Player.tscn" id="1_r150o"]
+[ext_resource type="PackedScene" uid="uid://ccaywac6wj0d1" path="res://Scenes/Projectile/Fireball.tscn" id="3_8rbpu"]
 
 [sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_c1w88"]
 
@@ -10,10 +11,12 @@ size = Vector2(20, 20)
 
 [sub_resource type="Environment" id="Environment_r150o"]
 
-[node name="Level" type="Node" node_paths=PackedStringArray("player_spawner")]
+[node name="Level" type="Node" node_paths=PackedStringArray("player_spawner", "projectile_spawner")]
 script = ExtResource("1_0ba56")
 player_scene = ExtResource("1_r150o")
-player_spawner = NodePath("Online Entities/MultiplayerSpawner")
+fireball_scene = ExtResource("3_8rbpu")
+player_spawner = NodePath("Online Entities/Player Spawner")
+projectile_spawner = NodePath("Online Entities/Projectile Spawner")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
 
@@ -34,6 +37,10 @@ transform = Transform3D(1, 0, 0, 0, 0.511473, 0.859299, 0, -0.859299, 0.511473, 
 
 [node name="Online Entities" type="Node" parent="."]
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Online Entities"]
+[node name="Player Spawner" type="MultiplayerSpawner" parent="Online Entities"]
 _spawnable_scenes = PackedStringArray("uid://beno5ptv37k6k")
+spawn_path = NodePath("..")
+
+[node name="Projectile Spawner" type="MultiplayerSpawner" parent="Online Entities"]
+_spawnable_scenes = PackedStringArray("uid://ccaywac6wj0d1")
 spawn_path = NodePath("..")

@@ -1,14 +1,18 @@
-[gd_scene load_steps=19 format=3 uid="uid://cl5kgklag4vbp"]
+[gd_scene load_steps=24 format=3 uid="uid://cl5kgklag4vbp"]
 
 [ext_resource type="Script" uid="uid://c2kn1mudtv3fu" path="res://Scripts/Entity/State/EventProcessor.gd" id="1_i5gcb"]
 [ext_resource type="Script" uid="uid://s6igf5ffpshw" path="res://Scripts/Entity/State/BehaviourManager.gd" id="2_ks3vw"]
 [ext_resource type="Script" uid="uid://ctbq6plaidocu" path="res://Scripts/Entity/State/BehaviourContainer.gd" id="3_6c7xe"]
-[ext_resource type="Script" uid="uid://cqotyu6vnhe44" path="res://Scripts/Entity/Humanoid/Primary/Behaviours/HumanoidPrimaryIdleBehaviour.gd" id="4_n8xxh"]
+[ext_resource type="Script" uid="uid://cqotyu6vnhe44" path="res://Scripts/Entity/Humanoid/Primary/Behaviours/Idle.gd" id="4_n8xxh"]
+[ext_resource type="Script" uid="uid://m68dr1ljo3xs" path="res://Scripts/Entity/Humanoid/Primary/Behaviours/Dead.gd" id="5_c5sdf"]
 [ext_resource type="Script" uid="uid://bgywwee53ppsu" path="res://Scripts/Entity/State/ActionContainer.gd" id="5_gfptg"]
-[ext_resource type="Script" uid="uid://t4bkal6ucsts" path="res://Scripts/Entity/Humanoid/Primary/Actions/HumanoidPrimaryIdleAction.gd" id="6_ekqb4"]
+[ext_resource type="Script" uid="uid://lbi2yfiwnel2" path="res://Scripts/Entity/State/SecondaryBehaviour.gd" id="6_07ml2"]
+[ext_resource type="Script" uid="uid://t4bkal6ucsts" path="res://Scripts/Entity/Humanoid/Primary/Actions/Idle.gd" id="6_ekqb4"]
 [ext_resource type="Script" uid="uid://ce0saoqq6hk24" path="res://Scripts/Entity/Humanoid/Movement/Behaviours/Jog.gd" id="7_j4q7a"]
 [ext_resource type="Script" uid="uid://c4cv3ydmr6ayt" path="res://Scripts/Entity/Humanoid/Movement/Behaviours/Locked.gd" id="8_t1tna"]
+[ext_resource type="Script" uid="uid://goadc64sjhjc" path="res://Scripts/Entity/Humanoid/Primary/Actions/Cast.gd" id="8_vh3c7"]
 [ext_resource type="Script" uid="uid://bucoofl35ab4j" path="res://Scripts/Entity/Humanoid/Movement/Behaviours/Sprint.gd" id="9_id01d"]
+[ext_resource type="Script" uid="uid://2bjbcsc84anh" path="res://Scripts/Entity/Humanoid/Primary/Actions/Dead.gd" id="10_4frwu"]
 [ext_resource type="Script" uid="uid://cjt2n1f5gb5ja" path="res://Scripts/Entity/Humanoid/Movement/Behaviours/Walk.gd" id="10_v4fgn"]
 [ext_resource type="Script" uid="uid://bej2mskmxdok" path="res://Scripts/Entity/Humanoid/Movement/Actions/CrouchIdle.gd" id="11_se8e1"]
 [ext_resource type="Script" uid="uid://blynkpwkecadu" path="res://Scripts/Entity/Humanoid/Movement/Actions/CrouchJog.gd" id="12_nsa3p"]
@@ -19,9 +23,14 @@
 [ext_resource type="Script" uid="uid://otsjnk5scgyu" path="res://Scripts/Entity/Humanoid/Movement/Actions/Walk.gd" id="17_gkpgp"]
 [ext_resource type="Script" uid="uid://jx6bxfijf2io" path="res://Scripts/Entity/Humanoid/Movement/Actions/Locked.gd" id="18_rlhal"]
 
-[node name="Event Processor" type="Node" node_paths=PackedStringArray("entity", "primary_behaviour_manager")]
+[sub_resource type="Resource" id="Resource_am1xq"]
+script = ExtResource("6_07ml2")
+manager_id = "movement"
+behaviour = NodePath("../../../Movement Behaviour Manager/Behaviour Container/Humanoid Movement Locked Behaviour")
+metadata/_custom_type_script = "uid://lbi2yfiwnel2"
+
+[node name="Event Processor" type="Node" node_paths=PackedStringArray("primary_behaviour_manager")]
 script = ExtResource("1_i5gcb")
-entity = NodePath("")
 primary_behaviour_manager = NodePath("Primary Behaviour Manager")
 metadata/_custom_type_script = "uid://c2kn1mudtv3fu"
 
@@ -40,7 +49,14 @@ metadata/_custom_type_script = "uid://ctbq6plaidocu"
 
 [node name="Humanoid Primary Idle Behaviour" type="Node" parent="Primary Behaviour Manager/Behaviour Container"]
 script = ExtResource("4_n8xxh")
+behaviour_string = "idle"
 metadata/_custom_type_script = "uid://cqotyu6vnhe44"
+
+[node name="Humanoid Primary Dead Behaviour" type="Node" parent="Primary Behaviour Manager/Behaviour Container"]
+script = ExtResource("5_c5sdf")
+secondary_behaviors = Array[ExtResource("6_07ml2")]([SubResource("Resource_am1xq")])
+behaviour_string = "dead"
+metadata/_custom_type_script = "uid://m68dr1ljo3xs"
 
 [node name="Action Container" type="Node" parent="Primary Behaviour Manager"]
 script = ExtResource("5_gfptg")
@@ -50,6 +66,16 @@ metadata/_custom_type_script = "uid://bgywwee53ppsu"
 script = ExtResource("6_ekqb4")
 action_name = "idle"
 metadata/_custom_type_script = "uid://t4bkal6ucsts"
+
+[node name="Humanoid Primary Cast Action" type="Node" parent="Primary Behaviour Manager/Action Container"]
+script = ExtResource("8_vh3c7")
+action_name = "cast"
+metadata/_custom_type_script = "uid://goadc64sjhjc"
+
+[node name="Humanoid Primary Dead Action" type="Node" parent="Primary Behaviour Manager/Action Container"]
+script = ExtResource("10_4frwu")
+action_name = "dead"
+metadata/_custom_type_script = "uid://2bjbcsc84anh"
 
 [node name="Movement Behaviour Manager" type="Node" parent="." node_paths=PackedStringArray("behavior_container", "actions_container", "current_behaviour")]
 script = ExtResource("2_ks3vw")

@@ -2,6 +2,7 @@ class_name PlayerContextGatherer;
 extends ContextGatherer;
 
 @export var ground_check: RayCast3D;
+@export var stats: Stats;
 
 
 func gather_context(_input: InputPackage) -> ContextPackage:
